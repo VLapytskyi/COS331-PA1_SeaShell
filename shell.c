@@ -44,6 +44,117 @@ typedef struct statusUpdateItem {
 statusUpdateItem* statusBuffer = NULL;
 statusUpdateItem* statusBufferTail = NULL;
 
+void printAbout() {
+    printf("\nSea Shell v1.0\nCopyright Volodymyr Lapytskyi, 2019\n");
+    printf("Developed as the Programming Assignment 1 for the\nCOS 331 \"Operating Systems\" course at AUBG\n");
+    printf("Submitted to Professor Anton Stoilov on March 21, 2019\n\n");
+    printf("Type \"help\" for the help message.\n\n");
+
+    return;
+}
+
+void printHelp() {
+    printAbout();
+
+    printf("The command prompt displays the current working directory.\n\n");
+
+    printf("In order to execute a command, just type it, followed by a space and the relevant arguments,\n%s",
+        "also separated with spaces, in the command line, just as you would do with any other command interpreter.\n\n");
+
+    printf("Built-in commands:\n");
+
+    printf("%-5s    %s\n", "bg", "Resume a job in the background;");
+    printf("%-5s    %s\n", "", "supply the job number in the first argument.");
+    printf("%-5s    %s\n", "", "See also the \"Job Control\" section of this help message.\n");
+
+    printf("%-5s    %s\n", "cd", "Change working directory; the path to the new working");
+    printf("%-5s    %s\n", "", "directory should be supplied as the first argument.\n");
+
+    printf("%-5s    %s\n", "exit", "Exit the shell. Instead, you can press Ctrl-D.\n");
+
+    printf("%-5s    %5s\n", "fg", "Resume a job in/bring a job to the foreground;");
+    printf("%-5s    %s\n", "", "supply the job number in the first argument.");
+    printf("%-5s    %s\n", "", "See also the \"Job Control\" section of this help message.\n");
+
+    printf("%-5s    %s\n", "help", "Display this help message.\n");
+
+    printf("%-5s    %s\n", "jobs", "Display all the jobs currently controlled by this instance of Sea Shell.");
+    printf("%-5s    %s\n", "", "See also the \"Job Control\" section of this help message.\n");
+
+    printf("All other commands are treated as external, thus the name of the command\n%s",
+        "is to be treated as the path to an executable.\n\n");
+
+    printf("If an external command contains the '/' character, the command will be seen as\n%s%s%s%s",
+        "an explicit absolute/relative path to the executable, so the file will be searched for\n",
+        "in the respective location relative to the current working directory.\n",
+        "If the command does NOT include a forward slash, the respective file will be searched for\n",
+        "in all directories specified in the PATH environment variable.\n\n");
+
+    printf("If a command/an argument, or a part of one, is enclosed in double quotes (\"),\n%s%s%s",
+        "any whitespaces contained in it will NOT be considered as the delimiters\n",
+        "(i.e. an argument with a space will not be considered as two arguments). In such case,\n",
+        "the double quotes will be removed from the argument when it is passed to the command.\n\n");
+    printf("Also, any character in your command line can be escaped with the '\\' character,\n%s%s%s%s",
+        "so that it will be treated \"as is\" (e.g. an escaped whitespace will be included\n",
+        "in the parameter, without being counted as the delimiter; escaped double quotes\n",
+        "will also appear in the parameter and will not be seen as double quotes).\n",
+        "'\\' character can be escaped itself (i.e. '\\\\' results in '\\').\n\n");
+    
+    printf("Examples:\n\n");
+
+    printf("%-20s    %s\n", "mkdir foo bar", "2 folders created: foo and bar;");
+    printf("%-20s    %s\n", "mkdir \"foo bar\"", "folder 'foo bar' created;");
+    printf("%-20s    %s\n", "mkdir fo\"o b\"ar", "folder 'foo bar' created;");
+    printf("%-20s    %s\n", "mkdir foo\\ bar", "folder 'foo bar' created;");
+    printf("%-20s    %s\n", "mkdir foo\\\\ bar", "2 folders created: foo\\ and bar;");
+    printf("%-20s    %s\n", "mkdir \"\\foo\\ b\\ar\"", "folder 'foo bar' created;");
+    printf("%-20s    %s\n", "mkdir fo\\\"o b\\\"ar", "2 folders created: fo\"o and b\"ar.");
+
+    printf("\n\n    ==== Job Control ====\n\n");
+
+    printf("Sea Shell v1.0 can keep track of several jobs simultaneously, each of\n%s%s",
+        "them being either stopped (suspended), running in the background or running in\n",
+        "the foreground (obviously, there can be no more than 1 job in the foreground).\n\n");
+
+    printf("The following actions are available:\n\n");
+
+    printf("%-42s    %s\n", "Display the list of all", "");
+    printf("%-42s    %s\n", "    suspended & background jobs", "Type \"jobs\"\n");
+    printf("%-42s    %s\n", "Run a command in the background", "Append the command line");
+    printf("%-42s    %s\n", "", "    with the '&' sign\n");
+    printf("%-42s    %s\n", "Terminate current foreground process", "");
+    printf("%-42s    %s\n", "    and return to the shell", "Press Ctrl-C\n");
+    printf("%-42s    %s\n", "Suspend current foreground process", "");
+    printf("%-42s    %s\n", "    and return to the shell", "Press Ctrl-Z\n");
+    printf("%-42s    %s\n", "Continue a suspended job in the background", "Type \"bg job_number\"\n");
+    printf("%-42s    %s\n", "Continue a suspended job in the foreground", "Type \"fg job_number\"\n");
+    printf("%-42s    %s\n", "Bring a background job to the foreground", "Type \"fg job_number\"\n");
+
+    printf("\nEvery time before the shell prints the command prompt, it will notify you if\n%s%s",
+        "the execution status of any job has changed since the previous prompt was displayed.\n",
+        "After every such update, all the jobs that have been marked as 'Done' are forgotten.\n\n");
+
+    printf("Both the \"jobs\" command and the real-time status updates share the same\n%s",
+        "format of the process record information:\n\n");
+
+    printf("1) [job_number]\n%s%s%s%s%s",
+        "2) PID=process_ID\n",
+        "3) execution_status\n",
+        "4) If process is not running: (status last_exit_code)\n",
+        "5) Path to the executable\n",
+        "6) If the process is in background: &\n");
+
+    printf("\n\n    ==== Author Information ====\n\n");
+    printf("I am Volodymyr Lapytskyi, a sophomore student at the\n%s%s%s",
+        "American University in Bulgaria, majoring in\n",
+        "Computer Science and Economics.\n",
+        "Email: VNL170@aubg.edu\n\n");
+
+    printf("The source code for this program can be found on GitHub at\nhttps://github.com/vlapytskyi-aubg/COS331-PA1_SeaShell\n\n");
+
+    return;
+}
+
 void _printProcInfo(processRecord* p, unsigned int jobNum, int backgr, processStatus s, int exitCode) {
     char status[] = "Terminated";
 
@@ -481,9 +592,7 @@ int main(int argc, char** argv) {
         exit(3);
     }
 
-    printf("\nSea Shell v1.0\nCopyright Volodymyr Lapytskyi, 2019\n");
-    printf("Developed as the Programming Assignment 1 for the COS 331 \"Operating Systems\" course at AUBG\n");
-    printf("Submitted to Professor Anton Stoilov on March 20, 2019\n\n");
+    printAbout();
 
     while (1) {
         updateStatus();
@@ -534,7 +643,12 @@ int main(int argc, char** argv) {
         }
 
         // Process built-in commands...
-        if (strcmp(args[0], "cd") == 0) {
+        if (strcmp(args[0], "help") == 0) {
+            fprintf(stderr, "help is a built-in command\n");
+
+            printHelp();
+        }
+        else if (strcmp(args[0], "cd") == 0) {
             fprintf(stderr, "cd is a built-in command\n");
 
             if (args[1] == NULL || strlen(args[1]) < 1) printf("cd: please specify a proper directory.\n");
