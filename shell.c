@@ -1,11 +1,11 @@
 /*
  * Sea Shell - a simple Linux shell (command interpreter) written in C.
- * Version 1.0 (March 21, 2019)
+ * Version 1.0 (March 23, 2019)
  * Copyright (C) 2019 Volodymyr Lapytskyi
  * 
  * Developed as the Programming Assignment 1 for the COS 331a "Operating Systems" course at
  * the American University in Bulgaria
- * Submitted to Professor Anton Stoilov on March 21, 2019
+ * Submitted to Professor Anton Stoilov on March 23, 2019
  * 
  * If you have any questions about details of implementation, or discovered bugs, or licensing, or anything else - 
  * please contact me at VNL170@aubg.edu
@@ -70,7 +70,7 @@ statusUpdateItem* statusBufferTail = NULL;  // Last item in the status updates b
 void printAbout() {
     printf("\nSea Shell v1.0\nCopyright (C) 2019 Volodymyr Lapytskyi\n");
     printf("Developed as the Programming Assignment 1 for the\nCOS 331 \"Operating Systems\" course at AUBG\n");
-    printf("Submitted to Professor Anton Stoilov on March 21, 2019\n\n");
+    printf("Submitted to Professor Anton Stoilov on March 23, 2019\n\n");
     printf("Type \"help\" for the help message.\n\n");
 
     return;
@@ -562,11 +562,12 @@ void resumeProcess(unsigned int jN, int backgr) {
 
     _printProcInfo(p, jN, backgr, running, 0);
 
-    if (p->status != running)   // If the process is stopped, we need to resume it by sending SIGCONT to it
+    if (p->status != running) {  // If the process is stopped, we need to resume it by sending SIGCONT to it
         if (kill(p->pid, SIGCONT) != 0) {
             fprintf(stderr, "Unable to resume process: kill() system call failed.\n");
             return;
-        }
+        } else p->status = running;
+    }
 
     if (!backgr) {  // If the process is to be executed in the foreground...
         if (tcsetpgrp(STDIN_FILENO, p->pid) < 0) {  // Hand the control over the terminal to the process
